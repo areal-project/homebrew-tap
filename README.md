@@ -2,7 +2,16 @@
 
 Public Homebrew distribution for complete AReaL Harness CLI bundles on macOS arm64 and Linux x86_64.
 
-## Beta
+## Stable
+
+```sh
+brew install areal-project/tap/areal
+areal --version
+```
+
+`areal` tracks stable CLI releases. Publishing a Beta does not change this formula.
+
+## Beta (optional)
 
 ```sh
 brew install areal-project/tap/areal-beta
@@ -23,4 +32,4 @@ macOS requires executable `/usr/bin/python3` from Xcode Command Line Tools. Linu
 
 Archives and checksums are published in [AReaL Harness Releases](https://github.com/areal-project/AReaL-Harness/releases). See the [installation and backend handoff guide](https://github.com/areal-project/AReaL-Harness/blob/main/docs/guides/installation.en.md) before changing an existing installation. Back up configuration and history before activating a new Core.
 
-Only the beta formula is currently published in this tap. Stable releases remain available through the standalone installer.
+Stable and Beta use separate formulas and update independently. Use `brew upgrade areal-project/tap/areal` for stable, or the Beta upgrade command above after explicitly opting in.

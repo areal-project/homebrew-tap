@@ -1,4 +1,4 @@
-name: Public beta installation
+name: Public CLI installation
 on:
   push:
     branches: [main]
@@ -7,7 +7,7 @@ permissions:
   contents: read
 jobs:
   native:
-    name: Public beta (${{ matrix.os }})
+    name: Public CLI (${{ matrix.os }})
     strategy:
       fail-fast: false
       matrix:
@@ -48,6 +48,11 @@ jobs:
           expected=$(sed -n 's/^  version "\([^"]*\)"/\1/p' Formula/areal-beta.rb)
           brew tap areal-project/tap
           tap=$(brew --repository areal-project/tap)
+          brew install areal-project/tap/areal
+          brew test areal-project/tap/areal
+          stable=$(brew --prefix areal-project/tap/areal)
+          stable_version=$("$stable/bin/areal" --version)
+          test "$stable_version" = "areal $(sed -n 's/^  version "\([^" ]*\)"/\1/p' Formula/areal.rb)"
           git -C "$tap" checkout cf16c03
           brew install "$formula"
           brew test "$formula"
@@ -58,6 +63,7 @@ jobs:
           brew test "$formula"
           keg=$(brew --prefix "$formula")
           test "$("$keg/bin/areal" --version)" = "areal $expected"
-          test ! -e "$(brew --prefix)/bin/areal"
+          test "$("$(brew --prefix)/bin/areal" --version)" = "$stable_version"
+          python3 harness/scripts/release-smoke.py --bundle "$stable" --executable "$(brew --prefix)/bin/areal"
           "$keg/bin/areal" upgrade --check
           python3 harness/scripts/release-smoke.py --bundle "$keg" --executable "$keg/bin/areal"
