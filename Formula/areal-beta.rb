@@ -1,7 +1,7 @@
 class ArealBeta < Formula
   desc "Agent harness with a terminal UI and local tool runtime"
   homepage "https://github.com/areal-project/AReaL-Harness"
-  version "0.1.7-beta.2"
+  version "0.1.7-beta.3"
   license "Apache-2.0"
   keg_only "the beta channel is opt-in and must not replace the stable CLI"
 
@@ -9,13 +9,13 @@ class ArealBeta < Formula
     depends_on arch: :arm64
     depends_on macos: :sequoia
     depends_on xcode: :clt
-    url "https://github.com/areal-project/AReaL-Harness/releases/download/v0.1.7-beta.2/areal-harness-v0.1.7-beta.2-aarch64-apple-darwin.tar.gz"
-    sha256 "44c31062026ed289dc2cb4dbae7800530a81f712efb71ae53b71d9f9991421de"
+    url "https://github.com/areal-project/AReaL-Harness/releases/download/v0.1.7-beta.3/areal-harness-v0.1.7-beta.3-aarch64-apple-darwin.tar.gz"
+    sha256 "242e122c74984c1b62e7d4e3947bf497a798c4072fb2e44487671223211d8701"
   end
   on_linux do
     depends_on arch: :x86_64
-    url "https://github.com/areal-project/AReaL-Harness/releases/download/v0.1.7-beta.2/areal-harness-v0.1.7-beta.2-x86_64-unknown-linux-gnu.tar.gz"
-    sha256 "55c980d26e8cb3758e5c0d52d9303365c1626f5bf3296526956ab0ab557a9ac6"
+    url "https://github.com/areal-project/AReaL-Harness/releases/download/v0.1.7-beta.3/areal-harness-v0.1.7-beta.3-x86_64-unknown-linux-gnu.tar.gz"
+    sha256 "bbc80c4cbfc9ad152a65bfc3aed1c63d0f3475fe6c0e5b12732ce75a281f4e57"
   end
 
   def install
@@ -38,7 +38,7 @@ class ArealBeta < Formula
   end
 
   test do
-    assert_equal "areal 0.1.7-beta.2", shell_output("#{bin}/areal --version").strip
+    assert_equal "areal 0.1.7-beta.3", shell_output("#{bin}/areal --version").strip
     assert_path_exists prefix/"libexec/areal/areal-runtime"
     assert_path_exists prefix/"libexec/areal/areal-runtime-fs"
     assert_path_exists prefix/"libexec/areal/areal-runtime-reaper" if OS.linux?
