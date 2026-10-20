@@ -1,0 +1,63 @@
+name: Public beta installation
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  native:
+    name: Public beta (${{ matrix.os }})
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [macos-15, ubuntu-24.04]
+    runs-on: ${{ matrix.os }}
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+        with:
+          persist-credentials: false
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+        with:
+          repository: areal-project/AReaL-Harness
+          ref: main
+          path: harness
+          persist-credentials: false
+      - uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020
+        with:
+          node-version: '22'
+      - name: Prepare native host
+        shell: bash
+        run: |
+          if [ "$RUNNER_OS" = Linux ]; then
+            sudo apt-get update
+            sudo apt-get install -y bubblewrap
+            echo /home/linuxbrew/.linuxbrew/bin >> "$GITHUB_PATH"
+          fi
+      - name: Verify public installation and upgrade
+        shell: bash
+        env:
+          HOMEBREW_NO_AUTO_UPDATE: '1'
+          HOMEBREW_NO_INSTALL_CLEANUP: '1'
+          HOMEBREW_NO_ANALYTICS: '1'
+          AREAL_HARNESS_HOME: ${{ runner.temp }}/areal-state
+        run: |
+          set -eu
+          formula=areal-project/tap/areal-beta
+          expected=$(sed -n 's/^  version "\([^"]*\)"/\1/p' Formula/areal-beta.rb)
+          brew tap areal-project/tap
+          tap=$(brew --repository areal-project/tap)
+          git -C "$tap" checkout cf16c03
+          brew install "$formula"
+          brew test "$formula"
+          test "$("$(brew --prefix "$formula")/bin/areal" --version)" = 'areal 0.1.7-beta.2'
+          git -C "$tap" checkout main
+          git -C "$tap" pull --ff-only origin main
+          if [ "$expected" != 0.1.7-beta.2 ]; then brew upgrade --formula "$formula"; fi
+          brew test "$formula"
+          keg=$(brew --prefix "$formula")
+          test "$("$keg/bin/areal" --version)" = "areal $expected"
+          test ! -e "$(brew --prefix)/bin/areal"
+          "$keg/bin/areal" upgrade --check
+          python3 harness/scripts/release-smoke.py --bundle "$keg" --executable "$keg/bin/areal"
