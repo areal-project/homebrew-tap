@@ -1,20 +1,20 @@
 class Areal < Formula
   desc "Agent harness with a terminal UI and local tool runtime"
   homepage "https://github.com/areal-project/AReaL-Harness"
-  version "0.1.8"
+  version "0.1.19"
   license "Apache-2.0"
 
   on_macos do
     depends_on arch: :arm64
     depends_on macos: :sequoia
     depends_on xcode: :clt
-    url "https://github.com/areal-project/AReaL-Harness/releases/download/v0.1.8/areal-harness-v0.1.8-aarch64-apple-darwin.tar.gz"
-    sha256 "b5d2308b6360f43aef2d9a2e5897926f3d115de86567835cedd40f43603d6cbd"
+    url "https://github.com/areal-project/AReaL-Harness/releases/download/v0.1.19/areal-harness-v0.1.19-aarch64-apple-darwin.tar.gz"
+    sha256 "66ecd08d858635793d3d6fbb747eec3b6d4ae4fa413ffd9dae3051c7278c3050"
   end
   on_linux do
     depends_on arch: :x86_64
-    url "https://github.com/areal-project/AReaL-Harness/releases/download/v0.1.8/areal-harness-v0.1.8-x86_64-unknown-linux-gnu.tar.gz"
-    sha256 "edc27bbf8502ba8dfb1130ed40121641dfefc82c8a41da46010c57d4c5ecd45b"
+    url "https://github.com/areal-project/AReaL-Harness/releases/download/v0.1.19/areal-harness-v0.1.19-x86_64-unknown-linux-gnu.tar.gz"
+    sha256 "57067044abb8ad707e60503ab3171538d4d9d44cf32ff90791b2b8149247301e"
   end
 
   def install
@@ -37,7 +37,7 @@ class Areal < Formula
   end
 
   test do
-    assert_equal "areal 0.1.8", shell_output("#{bin}/areal --version").strip
+    assert_equal "areal 0.1.19", shell_output("#{bin}/areal --version").strip
     assert_path_exists prefix/"libexec/areal/areal-runtime"
     assert_path_exists prefix/"libexec/areal/areal-runtime-fs"
     assert_path_exists prefix/"libexec/areal/areal-runtime-reaper" if OS.linux?
